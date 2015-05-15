@@ -45,7 +45,7 @@ Finally, we can reference the types declared in classes in the definition of oth
 
 ```Scala
 case class Person(@tag firstName: String, @tag("LastName") last: String, age: Int)
-class PhoneNumber(@tag number String, firstName: Person#FirstNameTag,
+class PhoneNumber(@tag number: String, firstName: Person#FirstNameTag,
                        lastName: Person#LastNameTag)
 ```
 
