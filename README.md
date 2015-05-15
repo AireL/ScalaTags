@@ -44,8 +44,9 @@ case class Person(@tag firstName: String, @tag("LastName") last: String, age: In
 Finally, we can reference the types declared in classes in the definition of other classes
 
 ```Scala
-case class Person(@tag firstName: String, @tag("LastName") last: String, age: Int) {
-class PhoneNumber(@tag number String, firstName: Person#FirstNameTag, lastName: Person#LastNameTag)
+case class Person(@tag firstName: String, @tag("LastName") last: String, age: Int)
+class PhoneNumber(@tag number String, firstName: Person#FirstNameTag,
+                       lastName: Person#LastNameTag)
 ```
 
 Admittedly, this was mainly a learning experience for me using macro paradise, but hopefully it has some use!
