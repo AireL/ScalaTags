@@ -25,7 +25,7 @@ object Instantiate {
 }
 ```
 
-We also have all of our standard tagging ability from Scalaz (Thanks Miles!)
+We also have all of our standard tagging ability from Scalaz (Thanks Miles and Jason!)
 
 ```Scala
 trait T
