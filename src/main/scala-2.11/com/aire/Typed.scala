@@ -16,7 +16,7 @@ object Tags {
       import c.universe._
       val inputs = annottees.map(_.tree).toList
       val (param, clazz) = inputs match {
-        case List(param : ValDef, q"case class $className(..$fields) extends ..$bases { ..$body }") => (param, (className, fields, bases, body))
+        case List(param : ValDef, q"$isCase class $className(..$fields) extends ..$bases { ..$body }") => (param, (isCase, className, fields, bases, body))
         case _ => c.abort(c.enclosingPosition, "[Typed] Invalid annottee. This annotation can only be placed on the fields of a class")
       }
       try {
@@ -31,22 +31,22 @@ object Tags {
           case _ => c.abort(c.enclosingPosition, "[Typed] Invalid annotation. This annotation can only take one parameter or less")
         }
 
-        val tup = clazz._2.span { paramdef =>
+        val tup = clazz._3.span { paramdef =>
           val q"$modsA val $nameA: $tptA = $rhsA" = paramdef
           nameA != name
         }
         val newFields = tup._1 ++ (tup._2 match {
           case head :: tail =>
             val q"$mods val $name: $tpt = $rhs" = head
-            val valdef = q"$mods val $name: $tpt @@ ${clazz._1}#$traitName = $rhs"
+            val valdef = q"$mods val $name: $tpt @@ ${clazz._2}#$traitName = $rhs"
             List(valdef) ++ tail
           case Nil => c.abort(c.enclosingPosition, "[Typed] Unexpected exception. Attempted to append the new value but could not split on it.")
         })
         c.Expr(q"""
-        case class ${clazz._1}(${newFields : _*}) extends ..${clazz._3} {
+        ${clazz._1} class ${clazz._2}(${newFields : _*}) extends ..${clazz._4} {
            trait $traitName
            type $traitNameTag = $tpt @@ $traitName
-           ..${clazz._4}
+           ..${clazz._5}
          }
         """)
       } catch {
